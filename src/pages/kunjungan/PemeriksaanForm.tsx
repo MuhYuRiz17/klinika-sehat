@@ -46,8 +46,9 @@ interface RekamMedis {
 
 const statusConfig: Record<string, { label: string; className: string }> = {
   menunggu: { label: "Menunggu", className: "status-waiting" },
-  sedang_diperiksa: { label: "Sedang Diperiksa", className: "status-inprogress" },
+  diperiksa: { label: "Sedang Diperiksa", className: "status-inprogress" },
   selesai: { label: "Selesai", className: "status-completed" },
+  batal: { label: "Batal", className: "bg-destructive/10 text-destructive" },
 };
 
 export default function PemeriksaanForm() {
@@ -136,14 +137,14 @@ export default function PemeriksaanForm() {
     try {
       const { error } = await supabase
         .from('kunjungan')
-        .update({ status: 'sedang_diperiksa' })
+        .update({ status: 'diperiksa' })
         .eq('id', id);
 
       if (error) {
         throw error;
       }
 
-      setKunjungan(prev => prev ? { ...prev, status: 'sedang_diperiksa' } : null);
+      setKunjungan(prev => prev ? { ...prev, status: 'diperiksa' } : null);
       toast({
         title: "Berhasil",
         description: "Pemeriksaan dimulai",
@@ -466,7 +467,7 @@ export default function PemeriksaanForm() {
             </div>
 
             {/* Save Button */}
-            {kunjungan.status === 'sedang_diperiksa' && (
+            {kunjungan.status === 'diperiksa' && (
               <div className="flex justify-end pt-4">
                 <Button 
                   onClick={handleSaveAndComplete} 

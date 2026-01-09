@@ -25,8 +25,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const statusConfig: Record<string, { label: string; className: string }> = {
   menunggu: { label: "Menunggu", className: "status-waiting" },
-  sedang_diperiksa: { label: "Sedang Diperiksa", className: "status-inprogress" },
+  diperiksa: { label: "Sedang Diperiksa", className: "status-inprogress" },
   selesai: { label: "Selesai", className: "status-completed" },
+  batal: { label: "Batal", className: "bg-destructive/10 text-destructive" },
 };
 
 interface Kunjungan {
@@ -184,7 +185,7 @@ export default function KunjunganList() {
             <SelectContent>
               <SelectItem value="all">Semua Status</SelectItem>
               <SelectItem value="menunggu">Menunggu</SelectItem>
-              <SelectItem value="sedang_diperiksa">Sedang Diperiksa</SelectItem>
+              <SelectItem value="diperiksa">Sedang Diperiksa</SelectItem>
               <SelectItem value="selesai">Selesai</SelectItem>
             </SelectContent>
           </Select>
