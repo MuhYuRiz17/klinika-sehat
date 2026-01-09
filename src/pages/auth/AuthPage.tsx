@@ -28,6 +28,11 @@ export default function AuthPage() {
   const [signupName, setSignupName] = useState('');
   const [signupRole, setSignupRole] = useState<AppRole>('admin');
 
+  // Dokter-specific form state
+  const [dokterSpesialisasi, setDokterSpesialisasi] = useState('');
+  const [dokterSip, setDokterSip] = useState('');
+  const [dokterNoHp, setDokterNoHp] = useState('');
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -77,7 +82,35 @@ export default function AuthPage() {
       return;
     }
 
-    const { error } = await signUp(signupEmail, signupPassword, signupName, signupRole);
+    // Validate dokter-specific fields
+    if (signupRole === 'dokter') {
+      if (!dokterSpesialisasi) {
+        toast({
+          variant: 'destructive',
+          title: 'Registrasi Gagal',
+          description: 'Spesialisasi harus dipilih',
+        });
+        setIsLoading(false);
+        return;
+      }
+      if (!dokterSip.trim()) {
+        toast({
+          variant: 'destructive',
+          title: 'Registrasi Gagal',
+          description: 'Nomor SIP harus diisi',
+        });
+        setIsLoading(false);
+        return;
+      }
+    }
+
+    const dokterData = signupRole === 'dokter' ? {
+      spesialisasi: dokterSpesialisasi,
+      sip: dokterSip,
+      noHp: dokterNoHp || undefined,
+    } : undefined;
+
+    const { error } = await signUp(signupEmail, signupPassword, signupName, signupRole, dokterData);
 
     if (error) {
       toast({
@@ -224,6 +257,51 @@ export default function AuthPage() {
                       </SelectContent>
                     </Select>
                   </div>
+
+                  {/* Dokter-specific fields */}
+                  {signupRole === 'dokter' && (
+                    <div className="space-y-4 pt-4 border-t">
+                      <p className="text-sm font-medium text-muted-foreground">Data Dokter</p>
+                      <div className="space-y-2">
+                        <Label htmlFor="dokter-spesialisasi">Spesialisasi *</Label>
+                        <Select value={dokterSpesialisasi} onValueChange={setDokterSpesialisasi}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Pilih spesialisasi" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Umum">Dokter Umum</SelectItem>
+                            <SelectItem value="Anak">Dokter Anak</SelectItem>
+                            <SelectItem value="Kandungan">Dokter Kandungan</SelectItem>
+                            <SelectItem value="Penyakit Dalam">Penyakit Dalam</SelectItem>
+                            <SelectItem value="Kulit & Kelamin">Kulit & Kelamin</SelectItem>
+                            <SelectItem value="THT">THT</SelectItem>
+                            <SelectItem value="Mata">Mata</SelectItem>
+                            <SelectItem value="Gigi">Gigi</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="dokter-sip">Nomor SIP *</Label>
+                        <Input
+                          id="dokter-sip"
+                          type="text"
+                          placeholder="SIP-XXX-XXXX-XXXX"
+                          value={dokterSip}
+                          onChange={(e) => setDokterSip(e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="dokter-nohp">Nomor HP (Opsional)</Label>
+                        <Input
+                          id="dokter-nohp"
+                          type="tel"
+                          placeholder="08xxxxxxxxxx"
+                          value={dokterNoHp}
+                          onChange={(e) => setDokterNoHp(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
                 <CardFooter>
                   <Button type="submit" className="w-full" disabled={isLoading}>
