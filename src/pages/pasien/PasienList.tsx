@@ -164,7 +164,7 @@ export default function PasienList() {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      {pasien.jenis_kelamin === "L" ? "Laki-laki" : "Perempuan"}
+                      {pasien.jenis_kelamin || '-'}
                     </TableCell>
                     <TableCell>{hitungUmur(pasien.tanggal_lahir)} tahun</TableCell>
                     <TableCell>
