@@ -14,6 +14,7 @@ import PasienForm from "./pages/pasien/PasienForm";
 import DokterList from "./pages/dokter/DokterList";
 import KunjunganList from "./pages/kunjungan/KunjunganList";
 import KunjunganForm from "./pages/kunjungan/KunjunganForm";
+import PemeriksaanForm from "./pages/kunjungan/PemeriksaanForm";
 import RekamMedisList from "./pages/rekam-medis/RekamMedisList";
 import RekamMedisDetail from "./pages/rekam-medis/RekamMedisDetail";
 import JadwalList from "./pages/jadwal/JadwalList";
@@ -134,6 +135,11 @@ const App = () => (
             <Route path="/kunjungan/tambah" element={
               <ProtectedRoute allowedRoles={['admin']}>
                 <KunjunganForm />
+              </ProtectedRoute>
+            } />
+            <Route path="/kunjungan/:id/pemeriksaan" element={
+              <ProtectedRoute allowedRoles={['admin', 'dokter']}>
+                <PemeriksaanForm />
               </ProtectedRoute>
             } />
             
