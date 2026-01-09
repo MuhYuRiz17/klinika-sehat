@@ -3,6 +3,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 // Pages
 import Dashboard from "./pages/Dashboard";
@@ -17,6 +19,8 @@ import RekamMedisDetail from "./pages/rekam-medis/RekamMedisDetail";
 import JadwalList from "./pages/jadwal/JadwalList";
 import LaporanPeriode from "./pages/laporan/LaporanPeriode";
 import NotFound from "./pages/NotFound";
+import AuthPage from "./pages/auth/AuthPage";
+import Unauthorized from "./pages/Unauthorized";
 
 const queryClient = new QueryClient();
 
@@ -26,38 +30,100 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          {/* Dashboard */}
-          <Route path="/" element={<Dashboard />} />
-          
-          {/* Pasien Routes */}
-          <Route path="/pasien" element={<PasienList />} />
-          <Route path="/pasien/tambah" element={<PasienForm />} />
-          <Route path="/pasien/:id" element={<PasienDetail />} />
-          <Route path="/pasien/:id/edit" element={<PasienForm />} />
-          
-          {/* Dokter Routes */}
-          <Route path="/dokter" element={<DokterList />} />
-          <Route path="/dokter/tambah" element={<PasienForm />} />
-          <Route path="/dokter/:id/edit" element={<PasienForm />} />
-          
-          {/* Kunjungan Routes */}
-          <Route path="/kunjungan" element={<KunjunganList />} />
-          <Route path="/kunjungan/tambah" element={<KunjunganForm />} />
-          
-          {/* Rekam Medis Routes */}
-          <Route path="/rekam-medis" element={<RekamMedisList />} />
-          <Route path="/rekam-medis/:id" element={<RekamMedisDetail />} />
-          
-          {/* Jadwal Routes */}
-          <Route path="/jadwal" element={<JadwalList />} />
-          
-          {/* Laporan Routes */}
-          <Route path="/laporan" element={<LaporanPeriode />} />
-          
-          {/* 404 */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            {/* Auth Routes */}
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/unauthorized" element={<Unauthorized />} />
+            
+            {/* Protected Routes */}
+            <Route path="/" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
+            
+            {/* Pasien Routes - All roles can view, Admin can manage */}
+            <Route path="/pasien" element={
+              <ProtectedRoute>
+                <PasienList />
+              </ProtectedRoute>
+            } />
+            <Route path="/pasien/tambah" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <PasienForm />
+              </ProtectedRoute>
+            } />
+            <Route path="/pasien/:id" element={
+              <ProtectedRoute>
+                <PasienDetail />
+              </ProtectedRoute>
+            } />
+            <Route path="/pasien/:id/edit" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <PasienForm />
+              </ProtectedRoute>
+            } />
+            
+            {/* Dokter Routes - Admin & Manajemen only */}
+            <Route path="/dokter" element={
+              <ProtectedRoute allowedRoles={['admin', 'manajemen']}>
+                <DokterList />
+              </ProtectedRoute>
+            } />
+            <Route path="/dokter/tambah" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <PasienForm />
+              </ProtectedRoute>
+            } />
+            <Route path="/dokter/:id/edit" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <PasienForm />
+              </ProtectedRoute>
+            } />
+            
+            {/* Kunjungan Routes - Admin & Dokter */}
+            <Route path="/kunjungan" element={
+              <ProtectedRoute allowedRoles={['admin', 'dokter']}>
+                <KunjunganList />
+              </ProtectedRoute>
+            } />
+            <Route path="/kunjungan/tambah" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <KunjunganForm />
+              </ProtectedRoute>
+            } />
+            
+            {/* Rekam Medis Routes - Admin & Dokter */}
+            <Route path="/rekam-medis" element={
+              <ProtectedRoute allowedRoles={['admin', 'dokter']}>
+                <RekamMedisList />
+              </ProtectedRoute>
+            } />
+            <Route path="/rekam-medis/:id" element={
+              <ProtectedRoute allowedRoles={['admin', 'dokter']}>
+                <RekamMedisDetail />
+              </ProtectedRoute>
+            } />
+            
+            {/* Jadwal Routes - All roles */}
+            <Route path="/jadwal" element={
+              <ProtectedRoute>
+                <JadwalList />
+              </ProtectedRoute>
+            } />
+            
+            {/* Laporan Routes - Admin & Manajemen */}
+            <Route path="/laporan" element={
+              <ProtectedRoute allowedRoles={['admin', 'manajemen']}>
+                <LaporanPeriode />
+              </ProtectedRoute>
+            } />
+            
+            {/* 404 */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
