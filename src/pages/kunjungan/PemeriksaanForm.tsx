@@ -317,7 +317,7 @@ export default function PemeriksaanForm() {
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Jenis Kelamin</span>
-                <span>{kunjungan.pasien?.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan'}</span>
+                <span>{kunjungan.pasien?.jenis_kelamin || '-'}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">No. HP</span>
