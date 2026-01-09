@@ -28,6 +28,11 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
+  // Redirect pasien to patient portal if trying to access staff routes
+  if (role === 'pasien' && !location.pathname.startsWith('/pasien-portal')) {
+    return <Navigate to="/pasien-portal/dashboard" replace />;
+  }
+
   // Check if user has required role
   if (allowedRoles && role && !allowedRoles.includes(role)) {
     return <Navigate to="/unauthorized" replace />;
