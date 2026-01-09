@@ -275,13 +275,13 @@ export default function KunjunganList() {
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-1">
-                          <Button asChild variant="ghost" size="icon">
+                          <Button asChild variant="ghost" size="icon" title="Lihat Pasien">
                             <Link to={`/pasien/${kunjungan.pasien?.id}`}>
                               <Eye className="h-4 w-4" />
                             </Link>
                           </Button>
-                          {kunjungan.status !== "selesai" && (
-                            <Button asChild variant="ghost" size="icon">
+                          {kunjungan.status !== "selesai" && (role === 'admin' || role === 'dokter') && (
+                            <Button asChild variant="ghost" size="icon" title="Periksa Pasien" className="text-primary hover:text-primary hover:bg-primary/10">
                               <Link to={`/kunjungan/${kunjungan.id}/pemeriksaan`}>
                                 <FileText className="h-4 w-4" />
                               </Link>
