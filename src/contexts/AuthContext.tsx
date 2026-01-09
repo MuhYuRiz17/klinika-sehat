@@ -5,13 +5,19 @@ import { useNavigate } from 'react-router-dom';
 
 type AppRole = 'admin' | 'dokter' | 'manajemen' | 'pasien';
 
+interface DokterData {
+  spesialisasi: string;
+  sip: string;
+  noHp?: string;
+}
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   role: AppRole | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
-  signUp: (email: string, password: string, fullName: string, role: AppRole) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, fullName: string, role: AppRole, dokterData?: DokterData) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
 
@@ -81,7 +87,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { error };
   };
 
-  const signUp = async (email: string, password: string, fullName: string, role: AppRole) => {
+  const signUp = async (email: string, password: string, fullName: string, role: AppRole, dokterData?: { spesialisasi: string; sip: string; noHp?: string }) => {
     const redirectUrl = `${window.location.origin}/`;
     
     const { data, error } = await supabase.auth.signUp({
@@ -111,6 +117,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (roleError) {
         console.error('Error assigning role:', roleError);
         return { error: new Error('Gagal menetapkan role pengguna') };
+      }
+
+      // If role is dokter, also create dokter record
+      if (role === 'dokter' && dokterData) {
+        const { error: dokterError } = await supabase
+          .from('dokter')
+          .insert({
+            user_id: data.user.id,
+            nama: fullName,
+            spesialisasi: dokterData.spesialisasi,
+            sip: dokterData.sip,
+            no_hp: dokterData.noHp || null,
+          });
+
+        if (dokterError) {
+          console.error('Error creating dokter record:', dokterError);
+          return { error: new Error('Gagal membuat data dokter') };
+        }
       }
     }
 
