@@ -91,6 +91,7 @@ const roleLabels: Record<AppRole, string> = {
   admin: 'Staff Pendaftaran',
   dokter: 'Dokter',
   manajemen: 'Manajemen',
+  pasien: 'Pasien',
 };
 
 export function AppSidebar() {
