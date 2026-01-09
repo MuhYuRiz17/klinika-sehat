@@ -14,6 +14,192 @@ export type Database = {
   }
   public: {
     Tables: {
+      dokter: {
+        Row: {
+          created_at: string
+          id: string
+          nama: string
+          no_hp: string | null
+          sip: string
+          spesialisasi: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          nama: string
+          no_hp?: string | null
+          sip: string
+          spesialisasi: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          nama?: string
+          no_hp?: string | null
+          sip?: string
+          spesialisasi?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      jadwal_praktik: {
+        Row: {
+          created_at: string
+          dokter_id: string
+          hari: string
+          id: string
+          jam_mulai: string
+          jam_selesai: string
+          kuota: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          dokter_id: string
+          hari: string
+          id?: string
+          jam_mulai: string
+          jam_selesai: string
+          kuota?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          dokter_id?: string
+          hari?: string
+          id?: string
+          jam_mulai?: string
+          jam_selesai?: string
+          kuota?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jadwal_praktik_dokter_id_fkey"
+            columns: ["dokter_id"]
+            isOneToOne: false
+            referencedRelation: "dokter"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kunjungan: {
+        Row: {
+          catatan: string | null
+          created_at: string
+          dokter_id: string
+          id: string
+          jadwal_id: string | null
+          nomor_antrian: number | null
+          pasien_id: string
+          status: string
+          tanggal: string
+          updated_at: string
+          waktu: string
+        }
+        Insert: {
+          catatan?: string | null
+          created_at?: string
+          dokter_id: string
+          id?: string
+          jadwal_id?: string | null
+          nomor_antrian?: number | null
+          pasien_id: string
+          status?: string
+          tanggal: string
+          updated_at?: string
+          waktu: string
+        }
+        Update: {
+          catatan?: string | null
+          created_at?: string
+          dokter_id?: string
+          id?: string
+          jadwal_id?: string | null
+          nomor_antrian?: number | null
+          pasien_id?: string
+          status?: string
+          tanggal?: string
+          updated_at?: string
+          waktu?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kunjungan_dokter_id_fkey"
+            columns: ["dokter_id"]
+            isOneToOne: false
+            referencedRelation: "dokter"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kunjungan_jadwal_id_fkey"
+            columns: ["jadwal_id"]
+            isOneToOne: false
+            referencedRelation: "jadwal_praktik"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kunjungan_pasien_id_fkey"
+            columns: ["pasien_id"]
+            isOneToOne: false
+            referencedRelation: "pasien"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pasien: {
+        Row: {
+          alamat: string | null
+          created_at: string
+          id: string
+          jenis_kelamin: string
+          kontak_darurat: string | null
+          nama_lengkap: string
+          nik: string
+          no_hp: string | null
+          no_rm: string
+          status_bpjs: boolean | null
+          tanggal_lahir: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          alamat?: string | null
+          created_at?: string
+          id?: string
+          jenis_kelamin: string
+          kontak_darurat?: string | null
+          nama_lengkap: string
+          nik: string
+          no_hp?: string | null
+          no_rm: string
+          status_bpjs?: boolean | null
+          tanggal_lahir: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          alamat?: string | null
+          created_at?: string
+          id?: string
+          jenis_kelamin?: string
+          kontak_darurat?: string | null
+          nama_lengkap?: string
+          nik?: string
+          no_hp?: string | null
+          no_rm?: string
+          status_bpjs?: boolean | null
+          tanggal_lahir?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -44,6 +230,53 @@ export type Database = {
         }
         Relationships: []
       }
+      rekam_medis: {
+        Row: {
+          anamnesis: string | null
+          catatan: string | null
+          created_at: string
+          diagnosa: string | null
+          id: string
+          keluhan: string | null
+          kunjungan_id: string
+          resep: string | null
+          tindakan: string | null
+          updated_at: string
+        }
+        Insert: {
+          anamnesis?: string | null
+          catatan?: string | null
+          created_at?: string
+          diagnosa?: string | null
+          id?: string
+          keluhan?: string | null
+          kunjungan_id: string
+          resep?: string | null
+          tindakan?: string | null
+          updated_at?: string
+        }
+        Update: {
+          anamnesis?: string | null
+          catatan?: string | null
+          created_at?: string
+          diagnosa?: string | null
+          id?: string
+          keluhan?: string | null
+          kunjungan_id?: string
+          resep?: string | null
+          tindakan?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rekam_medis_kunjungan_id_fkey"
+            columns: ["kunjungan_id"]
+            isOneToOne: true
+            referencedRelation: "kunjungan"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -70,6 +303,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_no_rm: { Args: never; Returns: string }
+      get_pasien_id_by_user: { Args: { _user_id: string }; Returns: string }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
@@ -81,9 +316,13 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_pasien_owner: {
+        Args: { _pasien_id: string; _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
-      app_role: "admin" | "dokter" | "manajemen"
+      app_role: "admin" | "dokter" | "manajemen" | "pasien"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -211,7 +450,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "dokter", "manajemen"],
+      app_role: ["admin", "dokter", "manajemen", "pasien"],
     },
   },
 } as const

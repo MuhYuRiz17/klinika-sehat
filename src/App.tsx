@@ -20,7 +20,16 @@ import JadwalList from "./pages/jadwal/JadwalList";
 import LaporanPeriode from "./pages/laporan/LaporanPeriode";
 import NotFound from "./pages/NotFound";
 import AuthPage from "./pages/auth/AuthPage";
+import PatientSignup from "./pages/auth/PatientSignup";
 import Unauthorized from "./pages/Unauthorized";
+
+// Patient Portal Pages
+import PatientDashboard from "./pages/pasien-portal/PatientDashboard";
+import PatientBooking from "./pages/pasien-portal/PatientBooking";
+import PatientVisitHistory from "./pages/pasien-portal/PatientVisitHistory";
+import PatientMedicalRecords from "./pages/pasien-portal/PatientMedicalRecords";
+import PatientMedicalRecordDetail from "./pages/pasien-portal/PatientMedicalRecordDetail";
+import PatientProfile from "./pages/pasien-portal/PatientProfile";
 
 const queryClient = new QueryClient();
 
@@ -34,7 +43,40 @@ const App = () => (
           <Routes>
             {/* Auth Routes */}
             <Route path="/auth" element={<AuthPage />} />
+            <Route path="/auth/pasien" element={<PatientSignup />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
+            
+            {/* Patient Portal Routes */}
+            <Route path="/pasien-portal/dashboard" element={
+              <ProtectedRoute allowedRoles={['pasien']}>
+                <PatientDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/pasien-portal/booking" element={
+              <ProtectedRoute allowedRoles={['pasien']}>
+                <PatientBooking />
+              </ProtectedRoute>
+            } />
+            <Route path="/pasien-portal/kunjungan" element={
+              <ProtectedRoute allowedRoles={['pasien']}>
+                <PatientVisitHistory />
+              </ProtectedRoute>
+            } />
+            <Route path="/pasien-portal/rekam-medis" element={
+              <ProtectedRoute allowedRoles={['pasien']}>
+                <PatientMedicalRecords />
+              </ProtectedRoute>
+            } />
+            <Route path="/pasien-portal/rekam-medis/:id" element={
+              <ProtectedRoute allowedRoles={['pasien']}>
+                <PatientMedicalRecordDetail />
+              </ProtectedRoute>
+            } />
+            <Route path="/pasien-portal/profil" element={
+              <ProtectedRoute allowedRoles={['pasien']}>
+                <PatientProfile />
+              </ProtectedRoute>
+            } />
             
             {/* Protected Routes */}
             <Route path="/" element={

@@ -110,6 +110,16 @@ export default function AuthPage() {
           <p className="text-muted-foreground mt-1">Sistem Informasi Rekam Medis</p>
         </div>
 
+        {/* Patient Portal Link */}
+        <Card className="mb-4 border-pink-200 bg-pink-50/50">
+          <CardContent className="pt-4 pb-4">
+            <p className="text-sm text-center text-muted-foreground mb-2">Untuk pasien:</p>
+            <Button variant="outline" className="w-full" onClick={() => navigate('/auth/pasien')}>
+              Daftar / Login Portal Pasien
+            </Button>
+          </CardContent>
+        </Card>
+
         <Card className="border-0 shadow-xl">
           <Tabs defaultValue="login" className="w-full">
             <TabsList className="grid w-full grid-cols-2">

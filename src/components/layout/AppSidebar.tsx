@@ -27,7 +27,7 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 
-type AppRole = 'admin' | 'dokter' | 'manajemen';
+type AppRole = 'admin' | 'dokter' | 'manajemen' | 'pasien';
 
 interface MenuItem {
   title: string;
