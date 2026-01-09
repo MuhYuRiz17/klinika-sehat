@@ -132,6 +132,15 @@ export default function PatientBooking() {
       return;
     }
 
+    if (!catatan.trim()) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Mohon isi keluhan atau catatan untuk dokter',
+      });
+      return;
+    }
+
     setSubmitting(true);
 
     try {
@@ -325,12 +334,13 @@ export default function PatientBooking() {
 
             {/* Notes */}
             <div className="space-y-2">
-              <Label>Catatan / Keluhan (Opsional)</Label>
+              <Label>Catatan / Keluhan <span className="text-destructive">*</span></Label>
               <Textarea
                 placeholder="Tuliskan keluhan atau catatan untuk dokter..."
                 value={catatan}
                 onChange={(e) => setCatatan(e.target.value)}
                 rows={3}
+                required
               />
             </div>
 
@@ -338,7 +348,7 @@ export default function PatientBooking() {
             <Button 
               className="w-full" 
               onClick={handleSubmit}
-              disabled={!selectedDokter || !selectedDate || !selectedJadwal || submitting}
+              disabled={!selectedDokter || !selectedDate || !selectedJadwal || !catatan.trim() || submitting}
             >
               {submitting ? 'Memproses...' : 'Konfirmasi Booking'}
             </Button>
