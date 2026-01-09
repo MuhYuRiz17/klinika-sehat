@@ -17,6 +17,7 @@ import KunjunganForm from "./pages/kunjungan/KunjunganForm";
 import RekamMedisList from "./pages/rekam-medis/RekamMedisList";
 import RekamMedisDetail from "./pages/rekam-medis/RekamMedisDetail";
 import JadwalList from "./pages/jadwal/JadwalList";
+import JadwalForm from "./pages/jadwal/JadwalForm";
 import LaporanPeriode from "./pages/laporan/LaporanPeriode";
 import NotFound from "./pages/NotFound";
 import AuthPage from "./pages/auth/AuthPage";
@@ -148,10 +149,20 @@ const App = () => (
               </ProtectedRoute>
             } />
             
-            {/* Jadwal Routes - All roles */}
+            {/* Jadwal Routes - All roles can view, Admin & Dokter can manage */}
             <Route path="/jadwal" element={
               <ProtectedRoute>
                 <JadwalList />
+              </ProtectedRoute>
+            } />
+            <Route path="/jadwal/tambah" element={
+              <ProtectedRoute allowedRoles={['admin', 'dokter']}>
+                <JadwalForm />
+              </ProtectedRoute>
+            } />
+            <Route path="/jadwal/:id/edit" element={
+              <ProtectedRoute allowedRoles={['admin', 'dokter']}>
+                <JadwalForm />
               </ProtectedRoute>
             } />
             
