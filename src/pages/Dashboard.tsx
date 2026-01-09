@@ -1,19 +1,53 @@
+import { useState, useEffect } from "react";
 import { Users, UserCheck, ClipboardList, Stethoscope } from "lucide-react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { RecentVisits } from "@/components/dashboard/RecentVisits";
 import { TodaySchedule } from "@/components/dashboard/TodaySchedule";
-import { pasienData, kunjunganData, dokterData } from "@/lib/mockData";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function Dashboard() {
-  const totalPasien = pasienData.length;
-  const kunjunganHariIni = kunjunganData.filter(k => 
-    k.tanggalWaktu.startsWith('2025-01-09')
-  ).length;
-  const pasienMenunggu = kunjunganData.filter(k => 
-    k.statusKunjungan === 'menunggu'
-  ).length;
-  const totalDokter = dokterData.length;
+  const [stats, setStats] = useState({
+    totalPasien: 0,
+    kunjunganHariIni: 0,
+    pasienMenunggu: 0,
+    totalDokter: 0,
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      const today = new Date().toISOString().split('T')[0];
+
+      // Fetch all stats in parallel
+      const [
+        { count: totalPasien },
+        { count: totalDokter },
+        { count: kunjunganHariIni },
+        { count: pasienMenunggu },
+      ] = await Promise.all([
+        supabase.from('pasien').select('*', { count: 'exact', head: true }),
+        supabase.from('dokter').select('*', { count: 'exact', head: true }),
+        supabase.from('kunjungan').select('*', { count: 'exact', head: true }).eq('tanggal', today),
+        supabase.from('kunjungan').select('*', { count: 'exact', head: true }).eq('status', 'menunggu'),
+      ]);
+
+      setStats({
+        totalPasien: totalPasien || 0,
+        kunjunganHariIni: kunjunganHariIni || 0,
+        pasienMenunggu: pasienMenunggu || 0,
+        totalDokter: totalDokter || 0,
+      });
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <MainLayout title="Dashboard">
@@ -32,27 +66,26 @@ export default function Dashboard() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard
             title="Total Pasien"
-            value={totalPasien}
+            value={loading ? "-" : stats.totalPasien}
             subtitle="Pasien terdaftar"
             icon={Users}
-            trend={{ value: 12, isPositive: true }}
           />
           <StatCard
             title="Kunjungan Hari Ini"
-            value={kunjunganHariIni}
+            value={loading ? "-" : stats.kunjunganHariIni}
             subtitle="Pasien berkunjung"
             icon={ClipboardList}
             variant="primary"
           />
           <StatCard
             title="Pasien Menunggu"
-            value={pasienMenunggu}
+            value={loading ? "-" : stats.pasienMenunggu}
             subtitle="Dalam antrian"
             icon={UserCheck}
           />
           <StatCard
             title="Dokter Aktif"
-            value={totalDokter}
+            value={loading ? "-" : stats.totalDokter}
             subtitle="Dokter praktik"
             icon={Stethoscope}
             variant="secondary"
