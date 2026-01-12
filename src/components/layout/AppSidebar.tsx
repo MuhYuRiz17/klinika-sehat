@@ -6,7 +6,6 @@ import {
   ClipboardList, 
   FileText, 
   BarChart3,
-  Stethoscope,
   LogOut,
 } from "lucide-react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
@@ -26,6 +25,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
+import clinicLogo from "@/assets/clinic-logo.png";
 
 type AppRole = 'admin' | 'dokter' | 'manajemen' | 'pasien';
 
@@ -133,9 +133,11 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" className="border-r-0">
       <SidebarHeader className="border-b border-sidebar-border p-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg gradient-primary">
-            <Stethoscope className="h-5 w-5 text-white" />
-          </div>
+          <img 
+            src={clinicLogo} 
+            alt="Klinik Pratama Logo" 
+            className="h-10 w-10 object-contain"
+          />
           {!isCollapsed && (
             <div className="flex flex-col">
               <span className="font-heading text-sm font-semibold text-sidebar-foreground">
