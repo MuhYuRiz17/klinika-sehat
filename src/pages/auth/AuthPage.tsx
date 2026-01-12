@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { Heart, Stethoscope } from 'lucide-react';
+import clinicLogo from '@/assets/clinic-logo.png';
 
 type AppRole = 'admin' | 'dokter' | 'manajemen';
 
@@ -136,9 +136,11 @@ export default function AuthPage() {
       <div className="w-full max-w-md">
         {/* Logo & Title */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
-            <Heart className="h-8 w-8 text-primary" />
-          </div>
+          <img 
+            src={clinicLogo} 
+            alt="Klinik Pratama Logo" 
+            className="h-20 w-20 mx-auto mb-4 object-contain"
+          />
           <h1 className="text-2xl font-bold text-foreground">Klinik Pratama</h1>
           <p className="text-muted-foreground mt-1">Sistem Informasi Rekam Medis</p>
         </div>
@@ -314,7 +316,6 @@ export default function AuthPage() {
         </Card>
 
         <p className="text-center text-sm text-muted-foreground mt-6">
-          <Stethoscope className="inline h-4 w-4 mr-1" />
           Sistem Informasi Klinik Pratama v1.0
         </p>
       </div>
