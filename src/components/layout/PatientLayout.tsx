@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { PatientSidebar } from './PatientSidebar';
 import { AppHeader } from './AppHeader';
+import PatientChatWidget from '@/components/patient-portal/PatientChatWidget';
 
 interface PatientLayoutProps {
   children: ReactNode;
@@ -19,6 +20,7 @@ export default function PatientLayout({ children, title }: PatientLayoutProps) {
             {children}
           </main>
         </div>
+        <PatientChatWidget />
       </div>
     </SidebarProvider>
   );
